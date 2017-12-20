@@ -46,7 +46,7 @@
 <div class="intrude-less">
 	<header id="header" class="inner">
 		<a href="/" class="profilepic">
-			<img src="http://www.qqzhi.com/uploadpic/2014-10-08/065649268.jpg" class="js-avatar">
+			<img src="/assets/blogImg/photo.gif" class="js-avatar">
 		</a>
 		<hgroup>
 		  <h1 class="header-author"><a href="/">Hu Ya</a></h1>
@@ -104,7 +104,7 @@
 	<div class="intrude-less">
 		<header id="header" class="inner">
 			<div class="profilepic">
-				<img src="http://www.qqzhi.com/uploadpic/2014-10-08/065649268.jpg" class="js-avatar">
+				<img src="/assets/blogImg/photo.gif" class="js-avatar">
 			</div>
 			<hgroup>
 			  <h1 class="header-author js-header-author">Hu Ya</h1>
@@ -175,7 +175,23 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Spring-In-Action-读书笔记"><a href="#Spring-In-Action-读书笔记" class="headerlink" title="Spring In Action 读书笔记"></a>Spring In Action 读书笔记</h1><p>最近开始系统性的学习Spring这个强大的框架，目标是坚持每天看一个小时的书，然后抽空写写笔记什么的。争取写的简单直白，让没用过spring的了解spring（ps：当然这是几乎没有的，现在公司基本用这个框架），让了解spring的更加深入的了解。至于大神希望指导不足之处。</p>
+        <h1 id="Spring-In-Action-读书笔记"><a href="#Spring-In-Action-读书笔记" class="headerlink" title="Spring In Action 读书笔记"></a>Spring In Action 读书笔记</h1><p>最近开始系统性的学习Spring这个强大的框架，目标是坚持每天看一个小时的书，然后抽空写写笔记什么的。争取写的简单直白，让没用过spring的了解spring（ps：当然这是几乎没有的，现在公司基本用这个框架），让了解spring的更加深入的了解。至于大神希望指导不足之处。话不多说下面先加单介绍一下Spring框架。</p>
+<blockquote>
+<p>Spring是一个开放源代码的设计层面框架，他解决的是业务逻辑层和其他各层的松耦合问题，因此它将面向接口的编程思想贯穿整个系统应用。Spring是于2003 年兴起的一个轻量级的Java 开发框架，由Rod Johnson创建。简单来说，Spring是一个分层的JavaSE/EEfull-stack(一站式) 轻量级开源框架。</p>
+</blockquote>
+<p>以上就是百度百科的介绍。其实可以理解为Spring取代了以前的臃肿、低效、脱离现实的EJB(Enterprise JavaBean)。至于怎么取代就是Spring的核心思想了，简化Java代码的开发特别是企业级的应用。书中讲述了Spring采取的4种关键策略：<br></p>
+<ol>
+<li>基于POJO的轻量级和最小侵入性编程<br></li>
+<li>通过依赖注入和面向接口实现松耦合<br></li>
+<li>基于切面和惯例进行声明式编程<br></li>
+<li>通过切面和模板减少样板式代码<br><br>Spring所做的任何事情都可以追溯到上述一条或多条的策略，好了下面看一看Spring的整个体系结构。</li>
+</ol>
+<h2 id="Spring体系结构"><a href="#Spring体系结构" class="headerlink" title="Spring体系结构"></a>Spring体系结构</h2><p>Spring框架是一个分层架构,它包含一系列的功能要素并被分为大约20个模块。这些个模块分为Core Container、Data Access/Integration、Web、AOP（Aspect Oriented Programming)、Instrumentation和测试部分,如下图所示：<br><br><img src="/assets/blogImg/1220-1.png"><br></p>
+<h3 id="Spring核心容器"><a href="#Spring核心容器" class="headerlink" title="Spring核心容器"></a>Spring核心容器</h3><p>容器是Spring中最核心的功能，它提供了控制反转(IOC)、依赖注入(DI)的特性。还有其他的一些服务如E-mail、JNDI访问、EJB集成和调度。所有的模块都是构建在核心容器之上，我会在下一节详细介绍。</p>
+<h3 id="Spring的AOP模块"><a href="#Spring的AOP模块" class="headerlink" title="Spring的AOP模块"></a>Spring的AOP模块</h3><p>在AOP模块中，Spring对面向切面编程提供了丰富的支持。这个模块是Spring应用系统中开发切面的基础。与DI一样，AOP可以帮助应用对象解耦。借助于AOP，可以将遍布系统的关注<br>点（例如事务和安全）从它们所应用的对象中解耦出来。</p>
+<h3 id="数据访问与集成"><a href="#数据访问与集成" class="headerlink" title="数据访问与集成"></a>数据访问与集成</h3><p>JDBC模块抽象了样板式代码例如获得数据库连接、创建语句、处理结果集到最后关闭数据库连接，简化了JDBC的开发。Spring的ORM模块建立在对DAO的支持之上，并为多个ORM框架提供了一种构建DAO的简便方式。JMS模块是提供“生产者、消费者”模板用于更加简单的使用JMS，后面会详细介绍Spring和ActiveMQ的整合。Transactions模块支持Spring的简单声明式事务管理。</p>
+<h3 id="WEB模块"><a href="#WEB模块" class="headerlink" title="WEB模块"></a>WEB模块</h3><p>Spring的WEB模块提供集成其它的MVC框架的同时它自身也有个强大的SpringMVC框架，后续会将详细介绍。同时还提供了基础的web功能如多文件上传、集成IOC容器、远程过程访问以及Web Service支持，和Restful Service的访问。</p>
+<h3 id="测试模块"><a href="#测试模块" class="headerlink" title="测试模块"></a>测试模块</h3><p>通过该模块，你会发现Spring为使用JNDI、Servlet和Portlet编写单元测试提供了一系列的mock对象实现。对于集成测试，该模块为加载Spring应用上下文中的bean集合以及与Spring上下文中的bean进行交互提供了支持。</p>
 
       
 
@@ -184,6 +200,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -309,6 +336,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Spring</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
