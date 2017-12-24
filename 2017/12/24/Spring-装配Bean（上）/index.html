@@ -6,18 +6,29 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Tag: Spring | Hexo</title>
+  <title>Spring 装配Bean（上） | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="技术干货">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/tags/Spring/index.html">
+  <meta name="description" content="Spring装配Bean经过上一章节的描述，让我们了解了Spring这个框架。接下来在本章中我我来说说Spring是怎么转配这些Bean的，以及装配Bean的几种方法。这里涉及到2个专业的术语我先介绍一下。    IOC：Inversion of Controller 控制反转，在程序中所谓的IOC其实简单的说，就是原来有我们自己实例化的对象交给Spring容器来初始化。这时对象的实例化的权利就会">
+<meta name="keywords" content="Spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring 装配Bean（上）">
+<meta property="og:url" content="http://yoursite.com/2017/12/24/Spring-装配Bean（上）/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="技术干货">
+<meta property="og:description" content="Spring装配Bean经过上一章节的描述，让我们了解了Spring这个框架。接下来在本章中我我来说说Spring是怎么转配这些Bean的，以及装配Bean的几种方法。这里涉及到2个专业的术语我先介绍一下。    IOC：Inversion of Controller 控制反转，在程序中所谓的IOC其实简单的说，就是原来有我们自己实例化的对象交给Spring容器来初始化。这时对象的实例化的权利就会">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-1.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-2.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-3.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-4.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-5.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-7.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-6.png">
+<meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-8.png">
+<meta property="og:updated_time" content="2017-12-24T13:20:31.030Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="技术干货">
+<meta name="twitter:title" content="Spring 装配Bean（上）">
+<meta name="twitter:description" content="Spring装配Bean经过上一章节的描述，让我们了解了Spring这个框架。接下来在本章中我我来说说Spring是怎么转配这些Bean的，以及装配Bean的几种方法。这里涉及到2个专业的术语我先介绍一下。    IOC：Inversion of Controller 控制反转，在程序中所谓的IOC其实简单的说，就是原来有我们自己实例化的对象交给Spring容器来初始化。这时对象的实例化的权利就会">
+<meta name="twitter:image" content="http://yoursite.com/assets/blogImg/1224-1.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -153,36 +164,111 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-Spring-装配Bean（上）" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Spring 装配Bean（上）
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/24/Spring-装配Bean（上）/" class="archive-article-date">
+
+        
+        <a href="/2017/12/24/Spring-装配Bean（上）/" class="archive-article-date">
   	<time datetime="2017-12-24T05:12:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-24</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/24/Spring-装配Bean（上）/">Spring 装配Bean（上）</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Spring装配Bean"><a href="#Spring装配Bean" class="headerlink" title="Spring装配Bean"></a>Spring装配Bean</h1><p>经过上一章节的描述，让我们了解了Spring这个框架。接下来在本章中我我来说说Spring是怎么转配这些Bean的，以及装配Bean的几种方法。这里涉及到2个专业的术语我先介绍一下。  </p>
+<ol>
+<li>IOC：Inversion of Controller 控制反转，在程序中所谓的IOC其实简单的说，就是原来有我们自己实例化的对象交给Spring容器来初始化。这时对象的实例化的权利就会反转。</li>
+<li>DI：dependence injection 依赖注入。在Spring创建Bean的时候，动态的讲依赖对象注入到Bean组件中。  </li>
+</ol>
+<p>以上就是Spring容器的2个核心要素，简单的来说就是Spring容器负责创建应用程序中的bean并通过DI来协调这些对象之间的关系，配置它们并管理它们的整个生命周期，从生存到死亡。如下图所示<br><img src="/assets/blogImg/1224-1.png"><br><br>Spring容器并不是只有一个。Spring自带了多个容器实现，可以归为两种不同的类型。bean工厂（由org.springframework. beans. factory.eanFactory接口定义）是最简单的容器，提供基本的DI支持，一般不使用。应用上下文（由org.springframework.context.ApplicationContext接口定义）基于BeanFactory构建，并提供应用框架级别的服务，例如从属性文件解析文本信息以及发布应用事件给感兴趣的事件监听者，企业中经常使用的，下面详细介绍一下应用上下文。</p>
+<h2 id="应用上下文"><a href="#应用上下文" class="headerlink" title="应用上下文"></a>应用上下文</h2><p>先了解一下ApplicationContext于BeanFactory的关系，如下图。<br><img src="/assets/blogImg/1224-2.png"><br><br>可以看出ApplicationContext是扩展BeanFactory的接口。BeanFactory它采取延迟加载的方案，只有在真正getBean的时候才会实例化Bean，在开发中我们一般使用ApplicationContext，它会在配置文件加载时，就会初始化Bean，并且ApplicationContext它提供不同应用层的Context实现，下面罗列的几个是你最有可能遇到的。</p>
+<ul>
+<li>AnnotationConfigApplicationContext：从一个或多个基于Java的配置类中加载Spring应用上下文。</li>
+<li>AnnotationConfigWebApplicationContext：从一个或多个基于Java的配置类中加载Spring Web应用上下文。</li>
+<li>ClassPathXmlApplicationContext：从类路径下的一个或多个XML配置文件中加载上下文定义，把应用上下文的定义文件作为类资源。</li>
+<li>FileSystemXmlapplicationcontext：从文件系统下的一个或多个XML配置文件中加载上下文义。</li>
+<li>XmlWebApplicationContext：从Web应用下的一个或多个XML配置文件中加载上下文定义。</li>
+</ul>
+<p>无论是从文件系统中装载应用上下文还是从类路径下装载应用上下文，将bean加载到bean工厂的过程都是相似的。例如，如下代码展示了如何加载一个FileSystemXmlApplicationContext：<br><code>AppliationContext context = new FileSystemXmlAppliationContext(&quot;c:/applicationContext.xml&quot;)</code><br>类似地，你可以使用ClassPathXmlApplicationContext从应用的类路径下加载应用上下文：<br><code>AppliationContext context = new ClassPathXmlAppliationContext(&quot;c:/applicationContext.xml&quot;)</code><br>它们两个的使用区别在于一个在指定的文件系统路径下查找配置文件，另一个是在所有的类路径（包含JAR文件）下查找配置文件。其他应用上下文在后面使用的时候说下如AnnotationConfigApplicationContext，应用上下文准备就绪之后，我们就可以调用上下文的getBean()方法从Spring容器中获取bean。现在你应该基本了解了如何创建Spring容器，让我们对容器中bean的生命周期做更进一步的探究。</p>
+<h2 id="bean的生命周期"><a href="#bean的生命周期" class="headerlink" title="bean的生命周期"></a>bean的生命周期</h2><p>在传统的Java应用中，bean的生命周期很简单。使用Java关键字new进行bean实例化，然后该bean就可以使用了。一旦该bean不再被使用，则由Java自动进行垃圾回收。</p>
+<p>相比之下，Spring容器中的bean的生命周期就显得相对复杂多了。正确理解Spring bean的生命<br>周期非常重要，因为你或许要利用Spring提供的扩展点来自定义bean的创建过程。下图展示<br>了bean装载到Spring应用上下文中的一个典型的生命周期过程。<br><img src="/assets/blogImg/1224-3.png"><br></p>
+<ol>
+<li>Spring对bean进行实例化；</li>
+<li>Spring将值和bean的引用注入到bean对应的属性中；</li>
+<li>如果bean实现了BeanNameAware接口，Spring将bean的ID传递给setBean-Name()方法；</li>
+<li>如果bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory()方法，将BeanFactory容器实例传入。或者如果bean实现了ApplicationContextAware接口，Spring将调<br>用setApplicationContext()方法，将bean所在的应用上下文的引用传入进来；</li>
+<li>如果bean实现了BeanPostProcessor接口，Spring将调用它们的post-ProcessBeforeInitialization()方法；</li>
+<li>如果bean实现了InitializingBean接口，Spring将调用它们的afterPropertiesSet()方法。</li>
+<li>如果bean使用init-method声明了初始化方法，该方法也会被调用；</li>
+<li>如果bean实现了BeanPostProcessor接口，Spring将调用它们的post-ProcessAfterInitialization()方法；</li>
+<li>此时，bean已经准备就绪，可以被应用程序使用了，它们将一直驻留在应用上下文中，直到该应用上下文被销毁；</li>
+<li>如果bean实现了DisposableBean接口，Spring将调用它的destroy()接口方法。</li>
+<li>如果bean使用destroy-method声明了销毁方法，该方法也会被调用。</li>
+</ol>
+<p>对于bean生命周期的方法，第三步第四步是让Bean了解spring容器，第五步和第八步可以针对指定的bean进行功能增强，这是一般会使用动态代理。第六步和第十步通过实现指定的接口完成init和destory操作但是开发中一般不用第六步和第十步而是使用第七步于第十一步的初始化于销毁操作因为他是无耦合的，但是必须在配置文件中指定初始化于销毁的方法，<strong>注意destory-method只针对scope=singleTon有效果。</strong></p>
+<p>现在你已经了解了如何创建和加载一个Spring容器。但是一个空的容器并没有太大的价值，在你把东西放进去之前，它里面什么都没有。为了从Spring的DI中受益，我们必须将应用对象装配进Spring容器中。下面简单的介绍spring配置的可选方案。</p>
+<h2 id="装配bean"><a href="#装配bean" class="headerlink" title="装配bean"></a>装配bean</h2><p>作为开发人员，你需要告诉Spring要创建哪些bean并且如何将其装配在一起。当描述bean如何进行装配时，Spring具有非常大的灵活性，下面介绍一下配置Spring容器的最常见的三种方法。</p>
+<ul>
+<li>在XML中进行显式配置</li>
+<li>隐式的bean发现机制和自动装配</li>
+<li>在java中进行显式配置</li>
+</ul>
+<p>乍看上去，提供三种可选的配置方案会使Spring变得复杂。每种配置技术所提供的功能会有一些重叠，所以在特定的场景中，确定哪种技术最为合适就会变得有些困难。但是，不必紧张——在很多场景下，选择哪种方案很大程度上就是个人喜好的问题，你尽可以选择自己最喜欢的方式。在一般的公司中很多都是用的XML显式配置和自动装配相结合的方式，至于java中显式的配置我目前了解是一般在Spring Boot中用到。（ps：Spring Boot后面再说，现在了解它是崭新的项目，以spring的视角，致力于简化Spring本身）</p>
+<h3 id="通过XML装配bean"><a href="#通过XML装配bean" class="headerlink" title="通过XML装配bean"></a>通过XML装配bean</h3><p>再使用XML为spring装配bean之前，需要创建一个XML文件，并且要以<code>&lt;beans&gt;</code>元素为根。最简单的SpringXML配置为如下所示：<br><img src="/assets/blogImg/1224-4.png"><br><br>可以看出再使用XML的时候，需要在配置文件的顶部声明多个XML模式（XSD）文件，这些文件定义了Spring的元素。用来装配bean的最基本的XML元素包含在spring-beans模式之中，在上面这个XML文件中，它被定义为根命名空间。<beans>是该模式中的一个元素，它是所有Spring配置文件的根元素。然而这个配置文件是空的没有配置任何bean。要在基于XML的Spring配置中声明一个bean，我们要使用spring-beans模式中的另外一个元素：<code>&lt;bean&gt;</code>。<br><code>&lt;bean id=&quot;userService&quot; class=&quot;com.huay.demo.UserServiceImpl&quot; /&gt;</code></beans></p>
+<p><strong>Spring框架中<code>&lt;bean&gt;</code>标签的配置</strong></p>
+<ol>
+<li>id属性: Bean起个名字，在约束中采用ID的约束，唯一<br>取值要求：必须以字母开始，可以使用字母、数字、连字符、下划线、句话、冒号。id:不能出现特殊字符。</li>
+<li>name属性: Bean起个名字，没有采用ID的约束（了解）<br>取值要求：name:可以出现特殊字符.如果<bean>没有id的话 , name可以当做id使用。</bean></li>
+<li>class属性: Bean对象的全路径</li>
+<li>scope属性: scope属性代表Bean的作用范围<ul>
+<li>单例（Singleton）：在整个应用中，只创建bean的一个实例。它是默认值。</li>
+<li>原型（Prototype）：每次注入或者通过Spring应用上下文获取的时候，都会创建一个新的bean实例。</li>
+<li>会话（Session）：在Web应用中，为每个会话创建一个bean实例。</li>
+<li>请求（Rquest）：在Web应用中，为每个请求创建一个bean实例。</li>
+</ul>
+</li>
+<li>init-method属性：当bean被载入到容器的时候调用init-method属性指定的方法</li>
+<li>destroy-method属性：当bean从容器中删除的时候调用destroy-method属性指定的方法，但是bean对象必须为单例的，web容器中会自动调用，但是main函数或测试用例需要手动调用（需要使用ClassPathXmlApplicationContext的close()方法）。</li>
+</ol>
+<p>接下来我们完善XML配置文件如下图所示：<br><img src="/assets/blogImg/1224-5.png"><br><br>在写一个Person类和测试demo。<br><img src="/assets/blogImg/1224-7.png"><br><br><img src="/assets/blogImg/1224-6.png"><br><br>运行后得到的结果为：<br><img src="/assets/blogImg/1224-8.png"><br><br>这样一个Spring的小栗子就完成了，但读者可以在脑海中想一下这个person类是如何从创建到销毁的，还有抛出一个问题，配置文件中的<code>&lt;property&gt;</code>是如何设置person中的成员属性name的？有没有其他的办法实现？答案见下一章节。</p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -194,57 +280,106 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2017/12/24/Spring-装配Bean（上）/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/12/18/Spring中的那些事/" class="archive-article-date">
-  	<time datetime="2017-12-18T14:53:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-18</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2017/12/18/Spring中的那些事/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spring中的那些事</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/12/18/Spring中的那些事/">Spring中的那些事</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -267,9 +402,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
