@@ -24,7 +24,7 @@
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-7.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-6.png">
 <meta property="og:image" content="http://yoursite.com/assets/blogImg/1224-8.png">
-<meta property="og:updated_time" content="2017-12-24T13:27:32.538Z">
+<meta property="og:updated_time" content="2017-12-24T14:05:31.477Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring 装配Bean（上）">
 <meta name="twitter:description" content="Spring装配Bean经过上一章节的描述，让我们了解了Spring这个框架。接下来在本章中我我来说说Spring是怎么装配这些Bean的，以及装配Bean的几种方法。这里涉及到2个专业的术语我先介绍一下。    IOC：Inversion of Controller 控制反转，在程序中所谓的IOC其实简单的说，就是原来有我们自己实例化的对象交给Spring容器来初始化。这时对象的实例化的权利就会">
@@ -205,7 +205,7 @@
 <li>Spring对bean进行实例化；</li>
 <li>Spring将值和bean的引用注入到bean对应的属性中；</li>
 <li>如果bean实现了BeanNameAware接口，Spring将bean的ID传递给setBean-Name()方法；</li>
-<li>如果bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory()方法，将BeanFactory容器实例传入。或者如果bean实现了ApplicationContextAware接口，Spring将调<br>用setApplicationContext()方法，将bean所在的应用上下文的引用传入进来；</li>
+<li>如果bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory()方法，将BeanFactory容器实例传入。或者如果bean实现了ApplicationContextAware接口，Spring将调用setApplicationContext()方法，将bean所在的应用上下文的引用传入进来；</li>
 <li>如果bean实现了BeanPostProcessor接口，Spring将调用它们的post-ProcessBeforeInitialization()方法；</li>
 <li>如果bean实现了InitializingBean接口，Spring将调用它们的afterPropertiesSet()方法。</li>
 <li>如果bean使用init-method声明了初始化方法，该方法也会被调用；</li>
