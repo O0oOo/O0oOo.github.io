@@ -155,19 +155,216 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Spring-装配Bean（上）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-Spring装配Bean(二)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/24/Spring-装配Bean（上）/">Spring 装配Bean（上）</a>
+      <a class="article-title" href="/2017/12/30/Spring装配Bean(二)/">Spring装配Bean(二)</a>
     </h1>
   
 
         
-        <a href="/2017/12/24/Spring-装配Bean（上）/" class="archive-article-date">
+        <a href="/2017/12/30/Spring装配Bean(二)/" class="archive-article-date">
+  	<time datetime="2017-12-30T01:27:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Bean属性的注入"><a href="#Bean属性的注入" class="headerlink" title="Bean属性的注入"></a>Bean属性的注入</h1><p>上一文中的person类在spring容器中如何注入name属性的了？相信大家也猜得八九不离十了，是通过person这个类name属性的set方法注入的。当然还有其他方式可以注入，就是通过构造方法注入，前提是类中要有相应的构造方法。好的本章主要来讲Spring的构造器注入和setter方法注入。以及一些集合类型的注入。</p>
+<h2 id="构造器注入"><a href="#构造器注入" class="headerlink" title="构造器注入"></a>构造器注入</h2><p>在Spring XML配置中，只有一种声明bean的方式：使用<code>&lt;bean&gt;</code>元素并指定class属性。Spring会从这里获取必要的信息来创建bean。但是，在XML中声明DI时，会有多种可选的配置方案和风格。具体到构造器注入，有两种基本的配置方案可供选择：</p>
+<ul>
+<li><constructor-arg>元素</constructor-arg></li>
+<li>使用Spring 3.0所引入的c-命名空间</li>
+</ul>
+<p>两者的区别在很大程度就是是否冗长烦琐。可以看到，<constructor-arg>元素比使用c命名空间会更加冗长，从而导致XML更加难以读懂。另外，有些事情<constructor-arg>可以做到，但是使用c-命名空间却无法实现。如下是<constructor-arg>的配置方法</constructor-arg></constructor-arg></constructor-arg></p>
+<hr>
+<pre><code>编写Java的类，提供构造方法
+public class Car {
+    private String name;
+    private double money;
+    public Car(String name, double money) {
+        this.name = name;
+        this.money = money;
+    }
+    @Override
+    public String toString() {
+        return &quot;Car [name=&quot; + name + &quot;, money=&quot; + money + &quot;]&quot;;
+    }
+}
+编写配置文件
+&lt;bean id=&quot;car&quot; class=&quot;com.itheima.demo4.Car&quot;&gt;
+    &lt;constructor-arg name=&quot;name&quot; value=&quot;大奔&quot;/&gt;
+    &lt;constructor-arg name=&quot;money&quot; value=&quot;100&quot;/&gt;
+&lt;/bean&gt;
+</code></pre><p>可以看出spring在初始化这个bean的时候是通过<constructor-arg>这个元素实现构造器的注入，在这个元素中有index、name、type、value和ref这几个属性。前四个很容易理解，index代表你构造器中的参数为止从0开始的，本案列中index=”0”代表name这第一个参数。而name和type就更加直白分别代表参数的名字和参数的类型。稍微比较复杂的就是value和ref这2个属性了，value性表明给定的值要以字面量的形式注入到构造器之中。而ref属性就是用来引入其他的bean，是具体的Bean的ID或者name的值。</constructor-arg></p>
+<p>相信大家看到这里已经了解了用<constructor-arg>来注入了，接下来看看怎么使用c-名称空间的注入。作为替代的方案，你也可以使用Spring的c-命名空间。c-命名空间是在Spring 3.0中引入的，<br>它是在XML中更为简洁地描述构造器参数的方式。要使用它的话，必须要在XML的顶部声<br>明其模式，如下所示：</constructor-arg></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+xsi:schemaLocation=&quot;
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+...
+&lt;/beans&gt;
+</code></pre><p>在c-命名空间和模式声明之后，我们就可以使用它来声明构造器参数了，如下所示：</p>
+<pre><code>&lt;bean id=&quot;car&quot; class=&quot;com.huya.demo.Car&quot; 
+       c:name=&quot;雅马哈&quot; c:money=&quot;10000&quot; /&gt;
+</code></pre><p>当然上面的属性名字只是简单的写法。当构造器需要引入一个bean作为参数的时候属性名需要如下图这样定义：<br><img src="/assets/blogImg/1230-1.png"><br><br>属性名以“c:”开头，也就是命名空间的前缀。接下来就是要装配的构造器参数名，在此之后是“-ref”，这是一个命名的约定，它会告诉Spring，正在装配的是一个bean的引用，这个bean的名字是compactDisc，而不是字面量“compactDisc”。</p>
+<h2 id="setter方法注入"><a href="#setter方法注入" class="headerlink" title="setter方法注入"></a>setter方法注入</h2><p>以上是我们用构造器来注入的简单列子，现在我们来看看怎么使用setter方法来注入。对比构造器的房子同样setter的注入在Spring XML配置文件中也有2中方式一个是<code>&lt;property&gt;</code>元素还有一个是p-命名空间。很显然要使用这种方式一定要有set方法，接下来在上面的car类中添加属性的set方法。别忘了还要添加一个空参的构造方法，设置了有参的构造得话默认的空参构造就没了。</p>
+<pre><code>public void setName(String name) {
+    this.name = name;
+}
+public void setMoney(double money) {
+    this.money = money;
+}
+编写配置文件
+&lt;bean id=&quot;car&quot; class=&quot;com.huya.demo.Car&quot;  &gt;
+       &lt;property name=&quot;name&quot;  value=&quot;奔驰&quot;/&gt;
+       &lt;property name=&quot;money&quot; value=&quot;3000&quot; /&gt;
+   &lt;/bean&gt;
+</code></pre><p>可以看出value是以字面量的形式注入，当然property还有个ref属性。这就是和constructor-arg的ref作用一样的了。我们已经知道，Spring为<constructor-arg>元素提供了c-命名空间作为替代方案，与之类似，Spring提供了更加简洁的p-命名空间，作为<property>元素的替代方案。为了启用p-命名空间，必须要在XML文件中与其他的命名空间一起对其进行声明：</property></constructor-arg></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+xsi:schemaLocation=&quot;
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd&quot;&gt;
+
+       ...
+
+&lt;/beans&gt;
+</code></pre><p>我们可以使用p-命名空间，按照以下的方式装配Car的属性：</p>
+<pre><code>&lt;bean id=&quot;car&quot; class=&quot;com.huya.demo.Car&quot; 
+       p:name=&quot;奔驰&quot; p:money=&quot;6666&quot; /&gt;
+</code></pre><p>p-命名空间中属性所遵循的命名约定与c-命名空间中的属性类似。下图阐述了p-命名空间属性是如何组成的。<br><img src="/assets/blogImg/1230-2.png"><br><br>首先，属性的名字使用了“p:”前缀，表明我们所设置的是一个属性。接下来就是要注入的属性名。最后，属性的名称以“-ref”结尾，这会提示Spring要进行装配的是引用，而不是字面量。要注入字面量的话去掉-ref就可以了。但需要注意的是，我们不能使用p-命名空间来装配集合，没有便利的方式使用p-命名空间来指定一个值（或bean引用）的列表。上面也说了c-命名空间不能完成但是<code>&lt;constructor-arg&gt;</code>可以完成的一些事也是这样。接下来我们看看集合的注入。</p>
+<h2 id="集合的注入"><a href="#集合的注入" class="headerlink" title="集合的注入"></a>集合的注入</h2><p>如果用构造器的注入的话只能使用<code>&lt;constructor-arg&gt;</code>相应的子元素如list、set、map和props等。我们再来改一下Car类如下，增加一个List集合属性表示轮子。</p>
+<pre><code>public class Car {
+    private String name;
+    private double money;
+    private List&lt;String&gt; wheel;
+    public Car(String name, double money,List&lt;String&gt; wheel) {
+        this.name = name;
+        this.money = money;
+        this.wheel = wheel;
+    }
+    @Override
+    public String toString() {
+        return &quot;Car [name=&quot; + name + &quot;, money=&quot; + money + &quot;, wheel=&quot; + wheel + &quot;]&quot;;
+    }
+}
+配置文件：
+&lt;bean id=&quot;car&quot; class=&quot;com.huya.demo.Car&quot; &gt;
+       &lt;constructor-arg name=&quot;name&quot; value=&quot;福特野马&quot;/&gt;
+       &lt;constructor-arg name=&quot;money&quot; value=&quot;88888&quot; /&gt;
+       &lt;constructor-arg name=&quot;wheel&quot;&gt;
+           &lt;list&gt;
+               &lt;value&gt;前轮1&lt;/value&gt;
+               &lt;value&gt;前轮2&lt;/value&gt;
+               &lt;value&gt;后轮1&lt;/value&gt;
+               &lt;value&gt;后轮2&lt;/value&gt;
+           &lt;/list&gt;
+       &lt;/constructor-arg&gt;    
+   &lt;/bean&gt;
+</code></pre><p>然后初始化这个bean并打印到控制台就是：<br><br>Car [name=福特野马, money=88888.0, wheel=[前轮1, 前轮2, 后轮1, 后轮2]]<br><br>其中，<code>&lt;list&gt;</code>元素是<code>&lt;constructor-arg&gt;</code>的子元素，这表明一个包含值的列表将会传递到构造器中。其中，<code>&lt;value&gt;</code>元素用来指定列表中的每个元素。与之类似，我们也可以使用<code>&lt;ref&gt;</code>元素替代<code>&lt;value&gt;</code>，实现bean引用列表的装配。与之类似的如果用setter注入的话，<code>&lt;property&gt;</code>元素也有集合所对应的的子元素这里我就不一一举例了。这里c-和p-命名空间不能注入集合属性的话那怎么办，当然了Spring提供了另一个Spring util-命名空间，它的作用就是把集合声明到Car这个bean的外面的单独的一个bean中，那么我们就可以使用-ref来指向它就可以了。同样使用Spring Util-命名空间也要在XML文件声明它的模式。以及改变一下bean的配置</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xmlns:p=&quot;http://www.springframework.org/schema/p&quot;
+xmlns:c=&quot;http://www.springframework.org/schema/c&quot;
+xmlns:util=&quot;http://www.springframework.org/schema/util&quot;
+xsi:schemaLocation=&quot;
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd&quot;&gt;
+
+       &lt;bean id=&quot;car&quot; class=&quot;com.huya.demo.Car&quot; &gt;
+       &lt;constructor-arg name=&quot;name&quot; value=&quot;福特野马&quot;/&gt;
+       &lt;constructor-arg name=&quot;money&quot; value=&quot;88888&quot; /&gt;
+       &lt;constructor-arg name=&quot;wheel&quot; ref=&quot;wheel&quot;/&gt;
+       &lt;/bean&gt;
+
+       &lt;util:list id=&apos;wheel&apos;&gt;
+           &lt;value&gt;前轮1&lt;/value&gt;
+        &lt;value&gt;前轮2&lt;/value&gt;
+        &lt;value&gt;后轮1&lt;/value&gt;
+        &lt;value&gt;后轮2&lt;/value&gt;
+       &lt;/util:list&gt;
+&lt;/beans&gt;
+</code></pre><p>有的人可能会说改怎么选择使用构造方法注入还是使用setter方法的属性注入了？作为一个通用的规则，我倾向于对强依赖使用构造器注入，而对可选性的依赖使用属性注入。至于使用标签还是命名空间这个就看个人爱好了，命名空间比较简洁容易看懂。好了本章就到这里了，读者可以思考一下，上面我所讲的都是硬编码形式注入的，有没有更加灵活注入了？</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Spring</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/12/30/Spring装配Bean(二)/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Spring装配Bean(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/12/24/Spring装配Bean(一)/">Spring 装配Bean(一)</a>
+    </h1>
+  
+
+        
+        <a href="/2017/12/24/Spring装配Bean(一)/" class="archive-article-date">
   	<time datetime="2017-12-24T05:12:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-24</time>
 </a>
         
@@ -254,7 +451,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2017/12/24/Spring-装配Bean（上）/">展开全文 >></a>
+          <a class="article-more-a" href="/2017/12/24/Spring装配Bean(一)/">展开全文 >></a>
         </p>
       
 
@@ -384,7 +581,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 Hu Ya
+    		&copy; 2018 Hu Ya
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
